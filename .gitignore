@@ -1,0 +1,15 @@
+node_modules/
+release/
+.npm-cache/
+.electron-zip/
+.capture-data/
+.edge-data/
+.electron-probe-data/
+.verify/
+debug.log
+*.tmp
+test/.tmp-*
+
+# Local editor / OS noise
+.DS_Store
+Thumbs.db

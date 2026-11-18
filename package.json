@@ -1,0 +1,46 @@
+{
+  "name": "fuguang-todo",
+  "productName": "浮光待办",
+  "version": "1.2.0",
+  "private": true,
+  "description": "Fuguang Todo - a glass daily planner that hides at the left edge of the Windows desktop",
+  "main": "src/main.js",
+  "author": {
+    "name": "Luckwolfwangwangzbs",
+    "url": "https://github.com/Luckwolfwangwang"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Luckwolfwangwang/fuguang-todo.git"
+  },
+  "homepage": "https://github.com/Luckwolfwangwang/fuguang-todo#readme",
+  "bugs": {
+    "url": "https://github.com/Luckwolfwangwang/fuguang-todo/issues"
+  },
+  "keywords": [
+    "windows",
+    "desktop",
+    "todo",
+    "planner",
+    "eisenhower-matrix",
+    "electron",
+    "glassmorphism",
+    "habits",
+    "productivity"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/all.js",
+    "package": "electron-packager . \"浮光待办\" --platform=win32 --arch=x64 --out=release --overwrite --icon=assets/icon.ico --executable-name=FuguangTodo --app-version=1.2.0 --ignore=\"^/tools($|/)\" --ignore=\"^/test($|/)\" --ignore=\"^/docs($|/)\" --ignore=\"^/release($|/)\" --ignore=\"^/scripts($|/)\" --ignore=\"^/node_modules($|/)\" --ignore=\"^/\\.npm-cache($|/)\" --ignore=\"^/\\.electron-zip($|/)\" --ignore=\"^/\\.capture-data($|/)\" --ignore=\"^/\\.edge-data($|/)\" --ignore=\"^/\\.electron-probe-data($|/)\" --ignore=\"^/\\.verify($|/)\" --ignore=\"^/\\.gitignore$\" --ignore=\"^/README\\.md$\" --ignore=\"^/debug\\.log$\" --ignore=\"^/package-lock\\.json$\"",
+    "icon": "python tools/make-icon.py",
+    "capture": "node scripts/capture.js"
+  },
+  "devDependencies": {
+    "@electron/packager": "^18.4.4",
+    "electron": "45.1.0"
+  }
+}

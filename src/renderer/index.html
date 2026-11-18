@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self' data:;">
+<meta name="color-scheme" content="dark">
+<title>浮光待办</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="demoBackdrop" class="demo-backdrop" aria-hidden="true"></div>
+
+<div id="stage">
+  <div id="handle" class="handle" aria-hidden="true">
+    <span class="handle-lamp"></span>
+    <span class="handle-grip"><i></i><i></i><i></i></span>
+    <span id="handleCount" class="handle-count" hidden>0</span>
+  </div>
+
+  <div id="firstHint" class="first-hint">
+    <span class="hint-dot"></span>
+    <span>回到桌面 · 鼠标移到左边缘呼出待办</span>
+  </div>
+
+  <section id="panel" class="panel" role="dialog" aria-modal="false" aria-label="浮光待办" aria-hidden="true">
+    <div class="glass">
+      <div id="backdrop" class="backdrop"></div>
+      <div class="glass-tint"></div>
+      <div class="noise"></div>
+      <div class="sheen"></div>
+      <div class="aurora aurora-a"></div>
+      <div class="aurora aurora-b"></div>
+      <div class="edge"></div>
+
+      <div class="content">
+        <header class="topbar">
+          <div class="brand">
+            <div class="logo" aria-hidden="true"><span></span></div>
+            <div class="titles">
+              <div class="eyebrow">FUGUANG · DAILY PLANNER</div>
+              <h1>浮光待办</h1>
+              <div class="subtitle">
+                <span class="live-dot"></span>
+                <span id="headerDate">正在准备今天…</span>
+              </div>
+            </div>
+          </div>
+          <div class="topbar-actions">
+            <button id="pinBtn" class="icon-btn" type="button" title="钉住面板（不自动收起）" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6l-.7 5.2 2.7 2.6v1.2H7v-1.2l2.7-2.6L9 4Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 13v7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </button>
+            <button id="collapseBtn" class="icon-btn" type="button" title="收起（Esc）">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 7-5 5 5 5M19 7l-5 5 5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button id="settingsBtn" class="icon-btn" type="button" title="设置">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.4v2M12 18.6v2M3.4 12h2M18.6 12h2M6 6l1.4 1.4M16.6 16.6 18 18M18 6l-1.4 1.4M7.4 16.6 6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <nav class="tabs" id="tabs" role="tablist" aria-label="功能分页">
+          <button class="tab active" data-tab="today" role="tab" aria-selected="true">今日<span class="tab-count" id="badgeToday" hidden></span></button>
+          <button class="tab" data-tab="habits" role="tab" aria-selected="false">打卡<span class="tab-count" id="badgeHabits" hidden></span></button>
+          <button class="tab" data-tab="appointments" role="tab" aria-selected="false">预约<span class="tab-count" id="badgeAppointments" hidden></span></button>
+          <button class="tab" data-tab="report" role="tab" aria-selected="false">月报</button>
+        </nav>
+
+        <main class="views">
+          <section id="view-today" class="view view-today active" data-view="today">
+            <div class="today-head">
+              <div class="today-progress">
+                <div class="progress-line">
+                  <b id="progressText">0 / 0</b>
+                  <span id="progressHint">今天还没有安排</span>
+                </div>
+                <div class="progress-bar"><span id="progressFill"></span></div>
+                <div class="progress-tags">
+                  <span id="estimateTag" class="tag info" hidden></span>
+                  <span id="delayedTag" class="tag warn" hidden></span>
+                  <span id="apptTag" class="tag info" hidden></span>
+                </div>
+              </div>
+              <button id="addTaskBtn" class="primary-btn" type="button">
+                <span class="plus">＋</span>新建待办
+              </button>
+            </div>
+            <div id="quadrantGrid" class="quadrant-grid"></div>
+            <section class="done-section">
+              <button id="doneToggle" class="done-toggle" type="button" aria-expanded="false">
+                <span class="done-check" aria-hidden="true">✓</span>
+                <span>已完成</span>
+                <span id="doneCount" class="done-count">0</span>
+                <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div id="doneList" class="done-list" hidden></div>
+            </section>
+          </section>
+
+          <section id="view-habits" class="view" data-view="habits">
+            <div class="view-head">
+              <div>
+                <h2>每日打卡</h2>
+                <p class="view-sub">到点提醒，完成后在打卡表上打钩</p>
+              </div>
+              <button id="addHabitBtn" class="primary-btn small" type="button"><span class="plus">＋</span>新建打卡</button>
+            </div>
+            <div id="habitCards" class="habit-cards"></div>
+            <div class="checkin-card">
+              <div class="checkin-top">
+                <h3>打卡表</h3>
+                <div class="month-nav">
+                  <button id="habitPrevMonth" class="nav-btn" type="button" title="上个月">‹</button>
+                  <span id="habitMonthLabel">--</span>
+                  <button id="habitNextMonth" class="nav-btn" type="button" title="下个月">›</button>
+                </div>
+              </div>
+              <div id="habitChips" class="habit-chips"></div>
+              <div id="checkinBody" class="checkin-body"></div>
+              <div id="habitSummary" class="habit-summary"></div>
+            </div>
+          </section>
+
+          <section id="view-appointments" class="view" data-view="appointments">
+            <div class="view-head">
+              <div>
+                <h2>预约</h2>
+                <p class="view-sub">提前 2 天和 1 天提醒，不再忘事</p>
+              </div>
+              <button id="addAppointmentBtn" class="primary-btn small" type="button"><span class="plus">＋</span>新建预约</button>
+            </div>
+            <div id="appointmentList" class="appointment-list"></div>
+          </section>
+
+          <section id="view-report" class="view" data-view="report">
+            <div class="view-head">
+              <div>
+                <h2>月报</h2>
+                <p class="view-sub">月底回看这个月的打卡、待办与预约</p>
+              </div>
+              <div class="month-nav">
+                <button id="reportPrevMonth" class="nav-btn" type="button" title="上个月">‹</button>
+                <span id="reportMonthLabel">--</span>
+                <button id="reportNextMonth" class="nav-btn" type="button" title="下个月">›</button>
+              </div>
+            </div>
+            <div id="reportBody" class="report-body"></div>
+            <div class="report-footer">
+              <button id="exportBtn" class="ghost-btn" type="button">导出月度报表 (CSV)</button>
+            </div>
+          </section>
+        </main>
+
+        <footer class="bottombar">
+          <span id="footerLeft">Esc 收起 · 桌面悬停左边缘呼出</span>
+          <span id="footerRight">今天 0 项待办</span>
+        </footer>
+      </div>
+
+      <div id="modalRoot" class="modal-root" hidden>
+        <div class="modal-scrim"></div>
+        <div id="modalCard" class="modal-card" role="dialog" aria-modal="true"></div>
+      </div>
+
+      <div id="toastRoot" class="toast-root" aria-live="polite"></div>
+    </div>
+  </section>
+</div>
+
+<script src="renderer.js"></script>
+</body>
+</html>
